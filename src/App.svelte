@@ -22,7 +22,6 @@
 		main.focus()
 	}
 	function keyDown(e, {id}) {
-		console.log(e)
 		if (e.keyCode == 8) {
 			closeTab(id)
 		}
