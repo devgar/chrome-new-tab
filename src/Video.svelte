@@ -1,6 +1,5 @@
 <script>
   let visible = false;
-  let video;
 </script>
 
 <video class:visible autoplay loop on:loadeddata="{e => visible = true}">
@@ -13,7 +12,7 @@ video {
   top: 50%;
   left: 50%;
   opacity: 0;
-  clip-path: circle(1vw at 50% 50%);
+  clip-path: circle(0 at 50% 50%);
   transform: translate(-50%, -50%);
   min-width: 100vw;
   min-height: 100vh;
@@ -22,8 +21,8 @@ video {
 }
 
 video.visible {
-  transition: opacity 0.1s, clip-path 0.7s;
-  clip-path: circle(100vw at 50% 50%);
+  transition: opacity 0.1s, clip-path 0.7s 0.2s;
+  clip-path: circle(71vmax at 50% 50%);
   opacity: 1;
 }
 </style>
