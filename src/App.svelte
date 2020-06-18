@@ -1,28 +1,21 @@
 <script>
 	import Video from './Video.svelte'
 	import Box from './Box.svelte'
+	import tabs from './stores/tabs'
 
 	let focused = false
-	let tabs = []
 	let main
 	let tabId
 	chrome.tabs.getCurrent(t => tabId = t.id)
-	chrome.tabs.onCreated.addListener( getTabs )
-	chrome.tabs.onRemoved.addListener( getTabs )
-	chrome.tabs.onUpdated.addListener( getTabs )
-	function getTabs() {
-		chrome.windows.getCurrent(w => chrome.tabs.query({windowId: w.id}, t => tabs = t))
-	}
-	getTabs()
 	function goTab(id) {
 		chrome.tabs.update(id, {selected: true})
 	}
 	function closeTab(id) {
-		chrome.tabs.remove(id)
-		main.focus()
+		// TODO: Determine and focus prev or next tab or input
+		chrome.tabs.remove(id, _ => main.focus())
 	}
 	function keyDown(e, {id}) {
-		if (e.keyCode == 8) {
+		if (e.keyCode == 8) { // remove
 			closeTab(id)
 		}
 		else if (e.keyCode == 13 && !(e.metaKey || e.ctrlKey)) {
@@ -43,15 +36,10 @@
 <main class:focused>
 	<Box>
 		<h1 slot="header">
-			<span>Tabs</span>
-			<div
-					class="small"
-					bind:this="{main}" 
-					tabindex="1" 
-			>&gt; Historial …</div>
+			<input bind:this="{main}" on:focus="{e => console.log($tabs)}">
 		</h1>
 		<ul>
-		{#each tabs as tab}
+		{#each $tabs as tab}
 			{#if tab.id != tabId}
 			<li>
 				<a
@@ -70,8 +58,7 @@
 </main>
 
 {#if !focused}
-<span class="overAll" on:click="{ e => focused || main.focus() }"
-></span>
+<span class="overAll" on:click="{ e => focused || main.focus() }"/>
 {/if}
 
 <style>
@@ -92,16 +79,6 @@ main:focus-within {
 }
 main h1 {
 	margin-top: 0;
-}
-
-main h1 .small {
-	font-size: 14px;
-	height: 0;
-	overflow: hidden;
-}
-main h1 .small:focus {
-	height: 16px;
-	outline:none;
 }
 
 main ul {

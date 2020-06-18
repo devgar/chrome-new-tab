@@ -10,7 +10,8 @@
   },
 
   "browser_action": {
-    "default_icon": "favicon.png"
+    "default_icon": "favicon.png",
+    "default_title": "Fast DL"
   },
 
   "permissions": [
